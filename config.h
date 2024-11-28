@@ -107,7 +107,7 @@ static const char *const autostart[] = {
     "/usr/libexec/polkit-mate-authentication-agent-1", NULL,
     "flameshot", NULL,
     "dunst", NULL,
-    // "picom", "-b", "--backend", "xrender", NULL,
+    "picom", "-b", NULL,
     "sh", "-c", "feh --bg-fill ~/Pictures/wallpapers/a_house_in_the_woods.png", NULL,
     "setxkbmap", "-option", "ctrl:nocaps", NULL,
     "slstatus", NULL,
