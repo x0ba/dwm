@@ -104,10 +104,10 @@ static const char *const autostart[] = {
     "xset", "s", "noblank", NULL,
     "xset", "-dpms", NULL,
     "dbus-update-activation-environment", "--systemd", "--all", NULL,
-    "/usr/libexec/polkit-kde-authentication-agent-1", NULL,
+    "/usr/libexec/polkit-mate-authentication-agent-1", NULL,
     "flameshot", NULL,
     "dunst", NULL,
-    "picom", "-b", "--backend", "xrender", NULL,
+    // "picom", "-b", "--backend", "xrender", NULL,
     "sh", "-c", "feh --bg-fill ~/Pictures/wallpapers/a_house_in_the_woods.png", NULL,
     "setxkbmap", "-option", "ctrl:nocaps", NULL,
     "slstatus", NULL,
@@ -178,8 +178,9 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "Gimp", .tags = 1 << 4)
-	RULE(.class = "Gimp", .tags = 1 << 4)
+	RULE(.class = "Firefox", .tags = 1 << 4)
 	RULE(.class = "kitty", .isterminal = 1)
+	RULE(.class = "org.wezfurlong.wezterm", .isterminal = 1)
 };
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
@@ -216,14 +217,15 @@ static const Layout layouts[] = {
 	{ "[M]",      monocle },
 	{ "(@)",      spiral },
 	{ "[\\]",     dwindle },
+	{ NULL,       NULL },
 };
 
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY,                       KEY,      comboview,      {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      combotag,       {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* commands */
@@ -232,7 +234,7 @@ static const char *dmenucmd[] = {
 	"j4-dmenu-desktop",
 	NULL
 };
-static const char *termcmd[]  = { "kitty", "-1", NULL };
+static const char *termcmd[]  = { "wezterm", "start", NULL };
 
 /* commands spawned when clicking statusbar, the mouse button pressed is exported as BUTTON */
 static const StatusCmd statuscmds[] = {
@@ -289,6 +291,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,          setlayout,              {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,          setlayout,              {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,          setlayout,              {.v = &layouts[2]} },
+	{ MODKEY|ControlMask,           XK_comma,      cyclelayout,            {.i = -1} },
+	{ MODKEY|ControlMask,           XK_period,     cyclelayout,            {.i = +1} },
 	{ MODKEY,                       XK_space,      setlayout,              {0} },
 	{ MODKEY|ShiftMask,             XK_space,      togglefloating,         {0} },
 	{ MODKEY,                       XK_y,          togglefullscreen,       {0} },
