@@ -41,8 +41,8 @@ static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
 static int fakefsindicatortype           = INDICATOR_PLUS;
 static int floatfakefsindicatortype      = INDICATOR_PLUS_AND_LARGER_SQUARE;
-static const char *fonts[]               = { "JetBrainsMono Nerd Font:size=12" };
-static const char dmenufont[]            = "JetBrainsMono Nerd Font:size=12";
+static const char *fonts[]               = { "monospace:size=12" };
+static const char dmenufont[]            = "monospace:size=12";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
@@ -178,7 +178,8 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "Gimp", .tags = 1 << 4)
-	RULE(.class = "Firefox", .tags = 1 << 7)
+	RULE(.class = "Gimp", .tags = 1 << 4)
+	RULE(.class = "kitty", .isterminal = 1)
 };
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
@@ -228,13 +229,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = {
-	"dmenu_run",
-	"-m", dmenumon,
-	"-fn", dmenufont,
-	"-nb", normbgcolor,
-	"-nf", normfgcolor,
-	"-sb", selbgcolor,
-	"-sf", selfgcolor,
+	"j4-dmenu-desktop",
 	NULL
 };
 static const char *termcmd[]  = { "kitty", "-1", NULL };
@@ -252,6 +247,7 @@ static const Key keys[] = {
 	/* modifier                     key            function                argument */
 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return,     spawn,                  {.v = termcmd } },
+        { MODKEY,                        XK_e,          spawn,                  SHCMD ("emacsclient -c")},
         { 0,                            XF86XK_MonBrightnessUp,    spawn,          SHCMD ("brightnessctl set 5%+")},
         { 0,                            XF86XK_MonBrightnessDown,  spawn,          SHCMD ("brightnessctl set 5%-")},
         { 0,                            XF86XK_AudioLowerVolume,   spawn,          SHCMD ("amixer sset Master 5%- unmute")},
