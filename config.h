@@ -41,8 +41,8 @@ static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
 static int fakefsindicatortype           = INDICATOR_PLUS;
 static int floatfakefsindicatortype      = INDICATOR_PLUS_AND_LARGER_SQUARE;
-static const char *fonts[]               = { "monospace:size=12" };
-static const char dmenufont[]            = "monospace:size=12";
+static const char *fonts[]               = { "monospace:size=13" };
+static const char dmenufont[]            = "monospace:size=13";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
@@ -100,15 +100,12 @@ static char *colors[][ColCount] = {
 };
 
 static const char *const autostart[] = {
-    "xset", "s", "off", NULL,
-    "xset", "s", "noblank", NULL,
-    "xset", "-dpms", NULL,
     "dbus-update-activation-environment", "--systemd", "--all", NULL,
     "/usr/libexec/polkit-mate-authentication-agent-1", NULL,
     "flameshot", NULL,
+    "xss-lock", "--transfer-sleep-lock", "--", "betterlockscreen", "-l", NULL,
     "dunst", NULL,
     "xrdb", "-load", "~/.config/X11/xresources",
-    // "picom", "-b", NULL,
     "sh", "-c", "feh --bg-fill ~/Pictures/wallpapers/j.jpg", NULL,
     "setxkbmap", "-option", "ctrl:nocaps", NULL,
     "slstatus", NULL,
@@ -182,6 +179,7 @@ static const Rule rules[] = {
 	RULE(.class = "Firefox", .tags = 1 << 4)
 	RULE(.class = "kitty", .isterminal = 1)
 	RULE(.class = "org.wezfurlong.wezterm", .isterminal = 1)
+	RULE(.class = "xterm", .isterminal = 1)
 };
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
@@ -232,10 +230,12 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = {
-	"j4-dmenu-desktop",
+	"rofi",
+	"-show",
+	"drun",
 	NULL
 };
-static const char *termcmd[]  = { "wezterm", "start", NULL };
+static const char *termcmd[]  = { "kitty", "-1", NULL };
 
 /* commands spawned when clicking statusbar, the mouse button pressed is exported as BUTTON */
 static const StatusCmd statuscmds[] = {
@@ -288,6 +288,7 @@ static const Key keys[] = {
 	{ Mod1Mask,                     XK_Tab,        alttabstart,            {0} },
 	{ MODKEY,                       XK_q,          killclient,             {0} },
 	{ MODKEY|ShiftMask,             XK_q,          quit,                   {0} },
+	{ MODKEY|ControlMask,           XK_q,          spawn,                  SHCMD("$HOME/.config/rofi/powermenu.sh")},
 	{ MODKEY|ShiftMask,             XK_F5,         xrdb,                   {.v = NULL } },
 	{ MODKEY,                       XK_t,          setlayout,              {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,          setlayout,              {.v = &layouts[1]} },
