@@ -446,18 +446,17 @@ combotag(const Arg *arg) {
 }
 
 void
-comboview(const Arg *arg) {
-	unsigned newtags = arg->ui & TAGMASK;
-	if (combo) {
-		selmon->tagset[selmon->seltags] |= newtags;
-	} else {
-		selmon->seltags ^= 1;	/*toggle tagset*/
-		combo = 1;
-		if (newtags)
-			selmon->tagset[selmon->seltags] = newtags;
-	}
+comboview(const Arg *arg)
+{
+    unsigned newtags = arg->ui & TAGMASK;
+    if (combo) {
+        selmon->tagset[selmon->seltags] |= newtags;
 	focus(NULL);
 	arrange(selmon);
+    } else {
+        view(arg);
+        combo = 1;
+    }
 }
 
 void
@@ -2198,8 +2197,10 @@ setup(void)
 	drw = drw_create(dpy, screen, root, sw, sh);
 	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
 		die("no fonts could be loaded.");
-	lrpad = drw->fonts->h;
-	bh = drw->fonts->h + 2;
+	// lrpad = drw->fonts->h;
+	// bh = drw->fonts->h + 2;
+	lrpad = drw->fonts->h + horizpadbar;
+	bh = drw->fonts->h + vertpadbar;
 	updategeom();
 	/* init atoms */
 	utf8string = XInternAtom(dpy, "UTF8_STRING", False);

@@ -20,6 +20,8 @@ static const char dwmdir[]               = "dwm";
 static const char localshare[]           = ".local/share";
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
+static const int horizpadbar        = 5;        /* horizontal padding for statusbar */
+static const int vertpadbar         = 6;        /* vertical padding for statusbar */
 #define ICONSIZE 20    /* icon size */
 #define ICONSPACING 5  /* space between icon and title */
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
@@ -41,8 +43,8 @@ static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
 static int fakefsindicatortype           = INDICATOR_PLUS;
 static int floatfakefsindicatortype      = INDICATOR_PLUS_AND_LARGER_SQUARE;
-static const char *fonts[]               = { "monospace:size=13" };
-static const char dmenufont[]            = "monospace:size=13";
+static const char *fonts[]               = { "monospace:size=12" };
+static const char dmenufont[]            = "monospace:size=12";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
@@ -103,10 +105,13 @@ static const char *const autostart[] = {
     "dbus-update-activation-environment", "--systemd", "--all", NULL,
     "/usr/libexec/polkit-mate-authentication-agent-1", NULL,
     "flameshot", NULL,
-    "xss-lock", "--transfer-sleep-lock", "--", "betterlockscreen", "-l", NULL,
+    "xss-lock", "--transfer-sleep-lock", "--", "i3lock", NULL,
     "dunst", NULL,
-    "xrdb", "-load", "~/.config/X11/xresources",
-    "sh", "-c", "feh --bg-fill ~/Pictures/wallpapers/j.jpg", NULL,
+    "picom", NULL,
+    "nm-applet", NULL,
+    "xrdb", "-load", "~/.config/X11/xresources", NULL,
+    "emacs", "--daemon", NULL,
+    "sh", "-c", "~/.fehbg", NULL,
     "setxkbmap", "-option", "ctrl:nocaps", NULL,
     "slstatus", NULL,
     NULL /* terminate */
@@ -253,9 +258,12 @@ static const Key keys[] = {
         { MODKEY,                        XK_e,          spawn,                  SHCMD ("emacsclient -c")},
         { 0,                            XF86XK_MonBrightnessUp,    spawn,          SHCMD ("brightnessctl set 5%+")},
         { 0,                            XF86XK_MonBrightnessDown,  spawn,          SHCMD ("brightnessctl set 5%-")},
+        { 0,                            XF86XK_AudioRaiseVolume,   spawn,          SHCMD ("amixer sset Master 5%+ unmute")},
         { 0,                            XF86XK_AudioLowerVolume,   spawn,          SHCMD ("amixer sset Master 5%- unmute")},
         { 0,                            XF86XK_AudioMute,          spawn,          SHCMD ("amixer sset Master $(amixer get Master | grep -q '\\[on\\]' && echo 'mute' || echo 'unmute')")},
-        { 0,                            XF86XK_AudioRaiseVolume,   spawn,          SHCMD ("amixer sset Master 5%+ unmute")},
+        { MODKEY|Mod1Mask,              XK_p,                      spawn,          SHCMD ("flameshot full -p ~/Pictures/Screenshots/")},
+        { MODKEY|ShiftMask,             XK_p,                      spawn,          SHCMD ("flameshot gui -p ~/Pictures/Screenshots/")},
+        { MODKEY|ControlMask,           XK_p,                      spawn,          SHCMD ("flameshot gui --clipboard")},
 	{ MODKEY,                       XK_b,          togglebar,              {0} },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
