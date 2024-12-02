@@ -8,7 +8,7 @@
 /* appearance */
 static const unsigned int borderpx       = 2;   /* border pixel of windows */
 static const unsigned int snap           = 32;  /* snap pixel */
-static const int swallowfloating         = 0;   /* 1 means swallow floating windows by default */
+static const int swallowfloating         = 1;   /* 1 means swallow floating windows by default */
 static const unsigned int gappih         = 5;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 5;  /* vert inner gap between windows */
 static const unsigned int gappoh         = 5;  /* horiz outer gap between windows and screen edge */
@@ -20,8 +20,8 @@ static const char dwmdir[]               = "dwm";
 static const char localshare[]           = ".local/share";
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
-static const int horizpadbar        = 5;        /* horizontal padding for statusbar */
-static const int vertpadbar         = 6;        /* vertical padding for statusbar */
+static const int horizpadbar        = 8;        /* horizontal padding for statusbar */
+static const int vertpadbar         = 13;        /* vertical padding for statusbar */
 #define ICONSIZE 20    /* icon size */
 #define ICONSPACING 5  /* space between icon and title */
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
@@ -43,40 +43,44 @@ static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
 static int fakefsindicatortype           = INDICATOR_PLUS;
 static int floatfakefsindicatortype      = INDICATOR_PLUS_AND_LARGER_SQUARE;
-static const char *fonts[]               = { "monospace:size=12" };
-static const char dmenufont[]            = "monospace:size=12";
+static const char *fonts[]  =   { 
+				"Ubuntu:weight=bold:size=11:antialias=true:hinting=true",
+				"Symbols Nerd Font Mono:size=11:antialias=true:hinting=true",
+				"Hack:size=11:antialias=true:autohint=true",
+				"JoyPixels:size=11:antialias=true:autohint=true"
+				};
 
 static char c000000[]                    = "#000000"; // placeholder value
 
-static char normfgcolor[]                = "#bbbbbb";
-static char normbgcolor[]                = "#222222";
-static char normbordercolor[]            = "#444444";
+static char normfgcolor[]                = "#ebdbb2";
+static char normbgcolor[]                = "#282828";
+static char normbordercolor[]            = "#3c3836";
 static char normfloatcolor[]             = "#db8fd9";
 
-static char selfgcolor[]                 = "#eeeeee";
-static char selbgcolor[]                 = "#005577";
-static char selbordercolor[]             = "#005577";
-static char selfloatcolor[]              = "#005577";
+static char selfgcolor[]                 = "#fbf1c7";
+static char selbgcolor[]                 = "#d65d0e";
+static char selbordercolor[]             = "#d65d0e";
+static char selfloatcolor[]              = "#d65d0e";
 
-static char titlenormfgcolor[]           = "#bbbbbb";
-static char titlenormbgcolor[]           = "#222222";
-static char titlenormbordercolor[]       = "#444444";
-static char titlenormfloatcolor[]        = "#db8fd9";
+static char titlenormfgcolor[]           = "#ebdbb2";
+static char titlenormbgcolor[]           = "#282828";
+static char titlenormbordercolor[]       = "#3c3836";
+static char titlenormfloatcolor[]        = "#3c3836";
 
-static char titleselfgcolor[]            = "#eeeeee";
-static char titleselbgcolor[]            = "#005577";
-static char titleselbordercolor[]        = "#005577";
-static char titleselfloatcolor[]         = "#005577";
+static char titleselfgcolor[]            = "#fbf1c7";
+static char titleselbgcolor[]            = "#d65d0e";
+static char titleselbordercolor[]        = "#d65d0e";
+static char titleselfloatcolor[]         = "#d65d0e";
 
-static char tagsnormfgcolor[]            = "#bbbbbb";
-static char tagsnormbgcolor[]            = "#222222";
-static char tagsnormbordercolor[]        = "#444444";
-static char tagsnormfloatcolor[]         = "#db8fd9";
+static char tagsnormfgcolor[]            = "#ebdbb2";
+static char tagsnormbgcolor[]            = "#282828";
+static char tagsnormbordercolor[]        = "#3c3836";
+static char tagsnormfloatcolor[]         = "#3c3836";
 
-static char tagsselfgcolor[]             = "#eeeeee";
-static char tagsselbgcolor[]             = "#005577";
-static char tagsselbordercolor[]         = "#005577";
-static char tagsselfloatcolor[]          = "#005577";
+static char tagsselfgcolor[]             = "#fbf1c7";
+static char tagsselbgcolor[]             = "#d65d0e";
+static char tagsselbordercolor[]         = "#d65d0e";
+static char tagsselfloatcolor[]          = "#d65d0e";
 
 static char hidnormfgcolor[]             = "#005577";
 static char hidselfgcolor[]              = "#227799";
@@ -107,9 +111,7 @@ static const char *const autostart[] = {
     "flameshot", NULL,
     "xss-lock", "--transfer-sleep-lock", "--", "i3lock", NULL,
     "dunst", NULL,
-    "picom", NULL,
-    "nm-applet", NULL,
-    "xrdb", "-load", "~/.config/X11/xresources", NULL,
+    "picom", "-b", NULL,
     "emacs", "--daemon", NULL,
     "sh", "-c", "~/.fehbg", NULL,
     "setxkbmap", "-option", "ctrl:nocaps", NULL,
@@ -146,7 +148,7 @@ static const char *const autostart[] = {
  */
 static char *tagicons[][NUMTAGS] =
 {
-	[DEFAULT_TAGS]        = { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+	[DEFAULT_TAGS]        = { "", "", "", "", "", "󰈈", "󰊖", "", "" },
 	[ALTERNATIVE_TAGS]    = { "A", "B", "C", "D", "E", "F", "G", "H", "I" },
 	[ALT_TAGS_DECORATION] = { "<1>", "<2>", "<3>", "<4>", "<5>", "<6>", "<7>", "<8>", "<9>" },
 };
@@ -264,6 +266,7 @@ static const Key keys[] = {
         { MODKEY|Mod1Mask,              XK_p,                      spawn,          SHCMD ("flameshot full -p ~/Pictures/Screenshots/")},
         { MODKEY|ShiftMask,             XK_p,                      spawn,          SHCMD ("flameshot gui -p ~/Pictures/Screenshots/")},
         { MODKEY|ControlMask,           XK_p,                      spawn,          SHCMD ("flameshot gui --clipboard")},
+	{ MODKEY|ShiftMask,             XK_w,                      spawn,          SHCMD ("feh --randomize --bg-fill ~/Pictures/wallpapers/gruvbox/*")},
 	{ MODKEY,                       XK_b,          togglebar,              {0} },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
